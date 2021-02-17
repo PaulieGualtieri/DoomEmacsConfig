@@ -141,7 +141,7 @@
   )
 (after! org
   (setq org-todo-keywords
-        `((sequence "TODO(t)" "NEXT(n)" "PROJ(p)"  "WAITING(w@/!)" "SOMEDAY(s)" "REPEAT(r)" "|" "DONE(d)" "CANCELLED(c)" "POSTPONED(p@/!)"))))
+        `((sequence  "REPEAT(r)" "TODO(t)" "NEXT(n)" "PROJ(p)"  "WAITING(w@/!)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELLED(c)" "POSTPONED(p@/!)"))))
 (after! org
   (setq org-tag-alist '((:startgroup . nil)
                         ("UNIVERSITY" . ?u)
@@ -150,6 +150,23 @@
                         )))
 (after! org
   (setq org-archive-location "%s_archive::"))
+(setq org-columns-default-format
+      "%25ITEM %TODO %3PRIORITY %SCHEDULED")
+
+(defun org-focus-university() "Set focus to university related stuff(including bachelor's work)"
+       (interactive)
+       (setq org-agenda-files '("~/Shared/org/inzynierka.org" "~/Shared/org/university.org")))
+
+(defun org-focus-all() "Set focus to all"
+       (interactive)
+       (setq org-agenda-files '("~/Shared/org/")))
+(defun org-focus-programming() "Set focus to programming stuff only"
+       (interactive)
+       (setq org-agenda-files '("~/Shared/org/programmingStuff.org")))
+(defun org-focus-private() "Set focus to private stuff"
+       (interactive)
+       (setq org-agenda-files '("~/Shared/org/trening.org" "~/Shared/org/house.org" "~/Shared/org/books.org" "~/Shared/org/food.org" "~/Shared/org/rozrywka.org")))
+
 
 (use-package org-super-agenda
   :after org-agenda
