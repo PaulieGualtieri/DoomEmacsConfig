@@ -19,17 +19,17 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-one)
-
+(setq doom-font (font-spec :family "monospace" :size 24 :weight 'semi-light))
+;;(set-face-attribute 'default nil :font "Fira Code Retina" :height 180)
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "/home/piotr/Shared/org/")
+(setq org-directory "~/Dropbox/org/")
 
 (use-package! org-fancy-priorities
   :hook (org-mode . org-fancy-priorities-mode)
@@ -104,6 +104,7 @@
    ;; sbt-supershell kills sbt-mode:  https://github.com/hvesalai/emacs-sbt-mode/issues/152
    (setq sbt:program-options '("-Dsbt.supershell=false"))
 )
+;; command log mode
 
 ;; Enable nice rendering of diagnostics like compile errors.
 (use-package flycheck
@@ -145,8 +146,9 @@
 (after! org
   (setq org-tag-alist '((:startgroup . nil)
                         ("UNIVERSITY" . ?u)
-                        ("WORKSTATION" . ?c)
+                        ("WORKSTATION" . ?w)
                         ("PROJECT" . ?p)
+                        ("CAPGEMINI" . ?c)
                         )))
 (after! org
   (setq org-archive-location "%s_archive::"))
@@ -155,17 +157,21 @@
 
 (defun org-focus-university() "Set focus to university related stuff(including bachelor's work)"
        (interactive)
-       (setq org-agenda-files '("~/Shared/org/inzynierka.org" "~/Shared/org/university.org")))
+       (setq org-agenda-files '("~/Dropbox/org/inzynierka.org" "~/Dropbox/org/university.org")))
 
 (defun org-focus-all() "Set focus to all"
        (interactive)
-       (setq org-agenda-files '("~/Shared/org/")))
+       (setq org-agenda-files '("~/Dropbox/org/" "~/Dropbox/org/stuff/")))
 (defun org-focus-programming() "Set focus to programming stuff only"
        (interactive)
-       (setq org-agenda-files '("~/Shared/org/programmingStuff.org")))
+       (setq org-agenda-files '("~/Dropbox/org/programmingStuff.org")))
+
+(defun org-focus-capgemini() "Set focus to capgemini stuff only"
+       (interactive)
+       (setq org-agenda-files '("~/Dropbox/org/capgemini.org")))
 (defun org-focus-private() "Set focus to private stuff"
        (interactive)
-       (setq org-agenda-files '("~/Shared/org/trening.org" "~/Shared/org/house.org" "~/Shared/org/books.org" "~/Shared/org/food.org" "~/Shared/org/rozrywka.org")))
+       (setq org-agenda-files '("~/Dropbox/org/trening.org" "~/Dropbox/org/linuxStuff.org" "~/Dropbox/org/emacs.org" "~/Dropbox/org/macStuff.org" "~/Dropbox/org/private.org" "~/Dropbox/org/house.org" "~/Dropbox/org/books.org" "~/Dropbox/org/food.org" "~/Dropbox/org/rozrywka.org")))
 
 
 (use-package org-super-agenda
@@ -187,3 +193,34 @@
   :config
   (org-super-agenda-mode)
                     )
+
+;; typescript
+(require 'tide)
+
+ (defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  ;; company is an optional dependency. You have to
+  ;; install it separately via package-install
+  ;; `M-x package-install [ret] company`
+  (company-mode +1))
+
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+
+;; formats the buffer before saving
+(add-hook 'before-save-hook 'tide-format-before-save)
+
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+
+(use-package tide
+  :ensure t
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
+

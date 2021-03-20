@@ -57,3 +57,6 @@
 (package! evil-snipe)
 (package! org-fancy-priorities)
 (package! org-bullets)
+(package! tide)
+(package! web-mode)
+(package! fira-code-mode)
